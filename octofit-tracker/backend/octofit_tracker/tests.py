@@ -2,6 +2,7 @@ from django.test import TestCase
 from .models import User, Team, Activity, Leaderboard, Workout
 
 class UserModelTest(TestCase):
+
     def setUp(self):
         self.user = User.objects.create(username="testuser", email="test@example.com", password="password123")
 
@@ -40,3 +41,4 @@ class WorkoutModelTest(TestCase):
     def test_workout_creation(self):
         self.assertEqual(self.workout.name, "Workout A")
         self.assertEqual(self.workout.description, "Test workout")
+
