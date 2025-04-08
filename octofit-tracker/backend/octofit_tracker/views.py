@@ -1,36 +1,56 @@
-from rest_framework import viewsets, status
+from rest_framework import generics
+from .models import User, Team, Activity, Leaderboard, Workout
+from .serializers import UserSerializer, TeamSerializer, ActivitySerializer, LeaderboardSerializer, WorkoutSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import UserSerializer, TeamSerializer, ActivitySerializer, LeaderboardSerializer, WorkoutSerializer
-from .models import User, Team, Activity, Leaderboard, Workout
+from rest_framework.reverse import reverse
 
 @api_view(['GET'])
 def api_root(request, format=None):
-    base_url = 'http://localhost:8000/'
     return Response({
-        'users': base_url + 'api/users/',
-        'teams': base_url + 'api/teams/',
-        'activities': base_url + 'api/activities/',
-        'leaderboard': base_url + 'api/leaderboard/',
-        'workouts': base_url + 'api/workouts/'
+        'users': reverse('user-list', request=request, format=format),
+        'teams': reverse('team-list', request=request, format=format),
+        'activities': reverse('activity-list', request=request, format=format),
+        'leaderboard': reverse('leaderboard-list', request=request, format=format),
+        'workouts': reverse('workout-list', request=request, format=format),
     })
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserList(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class TeamViewSet(viewsets.ModelViewSet):
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class TeamList(generics.ListCreateAPIView):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
-class ActivityViewSet(viewsets.ModelViewSet):
+class TeamDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
+
+class ActivityList(generics.ListCreateAPIView):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
 
-class LeaderboardViewSet(viewsets.ModelViewSet):
+class ActivityDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Activity.objects.all()
+    serializer_class = ActivitySerializer
+
+class LeaderboardList(generics.ListCreateAPIView):
     queryset = Leaderboard.objects.all()
     serializer_class = LeaderboardSerializer
 
-class WorkoutViewSet(viewsets.ModelViewSet):
+class LeaderboardDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Leaderboard.objects.all()
+    serializer_class = LeaderboardSerializer
+
+class WorkoutList(generics.ListCreateAPIView):
+    queryset = Workout.objects.all()
+    serializer_class = WorkoutSerializer
+
+class WorkoutDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Workout.objects.all()
     serializer_class = WorkoutSerializer
