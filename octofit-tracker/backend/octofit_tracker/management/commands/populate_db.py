@@ -1,45 +1,31 @@
 from django.core.management.base import BaseCommand
-from octofit_tracker.models import User, Team, Activity, Leaderboard, Workout
 from octofit_tracker.test_data import get_test_data
-from bson import ObjectId
+from django.conf import settings
+from pymongo import MongoClient
 
 class Command(BaseCommand):
     help = 'Populate the database with test data for users, teams, activities, leaderboard, and workouts'
 
     def handle(self, *args, **kwargs):
+        # Connect to MongoDB
+        client = MongoClient(settings.DATABASES['default']['HOST'], settings.DATABASES['default']['PORT'])
+        db = client[settings.DATABASES['default']['NAME']]
+
+        # Drop existing collections
+        db.users.drop()
+        db.teams.drop()
+        db.activities.drop()
+        db.leaderboard.drop()
+        db.workouts.drop()
+
+        # Get test data
         test_data = get_test_data()
 
-        # Clear existing data
-        User.objects.all().delete()
-        Team.objects.all().delete()
-        Activity.objects.all().delete()
-        Leaderboard.objects.all().delete()
-        Workout.objects.all().delete()
-
-        # Populate users
-        users = [User(**user) for user in test_data['users']]
-        User.objects.bulk_create(users)
-
-        # Populate teams
-        teams = [Team(**team) for team in test_data['teams']]
-        Team.objects.bulk_create(teams)
-
-        # Populate activities
-        activities = [
-            Activity(_id=ObjectId(), user=User.objects.first(), **activity)
-            for activity in test_data['activities']
-        ]
-        Activity.objects.bulk_create(activities)
-
-        # Populate leaderboard
-        leaderboard_entries = [
-            Leaderboard(_id=ObjectId(), user=User.objects.first(), **entry)
-            for entry in test_data['leaderboard']
-        ]
-        Leaderboard.objects.bulk_create(leaderboard_entries)
-
-        # Populate workouts
-        workouts = [Workout(**workout) for workout in test_data['workouts']]
-        Workout.objects.bulk_create(workouts)
+        # Insert test data into collections
+        db.users.insert_many(test_data['users'])
+        db.teams.insert_many(test_data['teams'])
+        db.activities.insert_many(test_data['activities'])
+        db.leaderboard.insert_many(test_data['leaderboard'])
+        db.workouts.insert_many(test_data['workouts'])
 
         self.stdout.write(self.style.SUCCESS('Successfully populated the database with test data.'))
