@@ -3,20 +3,20 @@ from .models import User, Team, Activity, Leaderboard, Workout
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'name', 'age', 'created_at')
+    list_display = ('username', 'email')
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_at')
+    list_display = ('name',)
 
 @admin.register(Activity)
 class ActivityAdmin(admin.ModelAdmin):
-    list_display = ('type', 'duration', 'date', 'user')
+    list_display = ('activity_type', 'duration', 'user')
 
 @admin.register(Leaderboard)
 class LeaderboardAdmin(admin.ModelAdmin):
-    list_display = ('team', 'points')
+    list_display = ('user', 'score')
 
 @admin.register(Workout)
 class WorkoutAdmin(admin.ModelAdmin):
-    list_display = ('name', 'duration')
+    list_display = ('name', 'description')
