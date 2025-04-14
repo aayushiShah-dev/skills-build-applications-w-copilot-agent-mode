@@ -104,8 +104,10 @@ DATABASES = {
     }
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
-ALLOWED_HOSTS = ['*']
+CORS_ALLOWED_ORIGINS = [
+    'https://jubilant-winner-6994q75jr5q9fr776-3000.app.github.dev',
+    'https://jubilant-winner-6994q75jr5q9fr776-8000.app.github.dev'
+]
 
 
 # Password validation
